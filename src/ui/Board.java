@@ -17,7 +17,6 @@ public class Board extends Application {
 
     static TextField[][] textFields;
     static int[][] intMatrix;
-    static Sudoku sudoku;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,7 +35,6 @@ public class Board extends Application {
 
         textFields = new TextField[9][9];
         intMatrix = new int[9][9];
-        sudoku = new Sudoku(intMatrix);
 
         for (int i = 0; i < intMatrix.length; i++) {
             for (int j = 0; j < intMatrix.length; j++) {
@@ -60,18 +58,26 @@ public class Board extends Application {
 
         }
 
-        fillFieldsRandomly();
         solveButton.setOnAction(e -> {
             for (int i = 0; i < textFields.length; i++) {
                 for (int j = 0; j < textFields.length; j++) {
                     String text = textFields[i][j].getText();
-                    if (!TextUtils.isEmpty(text)) {
+                    if (!TextUtils.isEmpty(text))
                         intMatrix[i][j] = Integer.parseInt(text);
-                    }
                 }
             }
-            System.out.println("Copied");
+
+            Sudoku sudoku = new Sudoku(intMatrix);
+            sudoku.solve();
             sudoku.printMatrix();
+
+            for (int i = 0; i < textFields.length; i++) {
+                for (int j = 0; j < textFields.length; j++) {
+                    textFields[i][j].setText(String.valueOf(
+                            sudoku.getMatrix()[i][j]
+                    ));
+                }
+            }
         });
 
 
@@ -80,36 +86,6 @@ public class Board extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    private static void fillFieldsRandomly() {
-        for (int i = 0; i < textFields.length; i++) {
-            for (int j = 0; j < textFields.length; j++) {
-                int num = sudoku.getMatrix()[i][j];
-                if (num > 0) {
-                    textFields[i][j].setText(String.valueOf(num));
-                }
-            }
-
-        }
-    }
-
-    private static boolean arrayContains(int[] array, int number) {
-        for (int value : array) {
-            if (number == value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean containsZeros(int[] array) {
-        for (int value : array) {
-            if (value == 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void main(String[] args) {
