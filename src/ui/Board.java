@@ -3,13 +3,14 @@ package ui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import model.Sudoku;
-import org.apache.http.util.TextUtils;
+import org.jdom.Text;
 
 import java.util.ArrayList;
 
@@ -62,24 +63,33 @@ public class Board extends Application {
             for (int i = 0; i < textFields.length; i++) {
                 for (int j = 0; j < textFields.length; j++) {
                     String text = textFields[i][j].getText();
-                    if (!TextUtils.isEmpty(text))
+                    if (!text.equals(""))
                         intMatrix[i][j] = Integer.parseInt(text);
                 }
             }
 
             Sudoku sudoku = new Sudoku(intMatrix);
-            sudoku.solve();
-            sudoku.printMatrix();
 
-            for (int i = 0; i < textFields.length; i++) {
-                for (int j = 0; j < textFields.length; j++) {
-                    textFields[i][j].setText(String.valueOf(
-                            sudoku.getMatrix()[i][j]
-                    ));
+            if (sudoku.solve()) {
+                for (int i = 0; i < textFields.length; i++) {
+                    for (int j = 0; j < textFields.length; j++) {
+                        textFields[i][j].setText(String.valueOf(
+                                sudoku.getMatrix()[i][j]
+                        ));
+                    }
                 }
+            } else {
+                System.out.println("Unsolvable");
             }
         });
 
+        clearButton.setOnAction(e -> {
+            for (TextField[] fieldArray : textFields) {
+                for (TextField field : fieldArray) {
+                    field.setText("");
+                }
+            }
+        });
 
         root.setCenter(tilePane);
         root.setTop(hBox);

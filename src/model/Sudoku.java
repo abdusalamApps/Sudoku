@@ -6,7 +6,7 @@ import java.util.Random;
 public class Sudoku {
 
     public static int[][] GRID_TO_SOLVE = {
-            {9, 0, 0, 1, 0, 0, 0, 0, 5},
+            {9, 1, 1, 1, 0, 0, 0, 0, 5},
             {0, 0, 5, 0, 9, 0, 2, 0, 1},
             {8, 0, 0, 0, 4, 0, 0, 0, 0},
             {0, 0, 0, 0, 8, 0, 0, 0, 0},
@@ -81,7 +81,7 @@ public class Sudoku {
      * @param number
      * @return false if the specified number is NOT in the specified row
      */
-    public boolean isInRow(int row, int number) {
+    private boolean isInRow(int row, int number) {
         for (int i = 0; i < SIZE; i++) {
             if (matrix[row][i] == number)
                 return true;
@@ -96,7 +96,7 @@ public class Sudoku {
      * @param number
      * @return false if the specified number is NOT in the specified column
      */
-    public boolean isInCol(int col, int number) {
+    private boolean isInCol(int col, int number) {
         for (int i = 0; i < SIZE; i++) {
             if (matrix[i][col] == number)
                 return true;
@@ -104,7 +104,7 @@ public class Sudoku {
         return false;
     }
 
-    public boolean isInBox(int row, int col, int number) {
+    private boolean isInBox(int row, int col, int number) {
         int r = row - row % 3;
         int c = col - col % 3;
 
@@ -115,7 +115,7 @@ public class Sudoku {
         return false;
     }
 
-    public boolean isOk(int row, int col, int number) {
+    private boolean isOk(int row, int col, int number) {
         return !isInRow(row, number) && !isInCol(col, number) && !isInBox(row, col, number);
     }
 
@@ -144,9 +144,18 @@ public class Sudoku {
     }
 
     public static void main(String[] args) {
+/*
         Sudoku sudoku = new Sudoku(GRID_TO_SOLVE);
         System.out.println("Grid to solve: ");
         sudoku.printMatrix();
+*/
+
+        int[][] matrix = new int[9][9];
+        matrix[0][0] = 1;
+        matrix[0][1] = 1;
+        matrix[0][2] = 1;
+
+        Sudoku sudoku = new Sudoku(matrix);
 
         if (sudoku.solve()) {
             System.out.println("Solved");
