@@ -5,57 +5,57 @@ import java.util.Random;
 
 public class Sudoku {
 
-    public static int[][] GRID_TO_SOLVE = {
-            {9, 1, 1, 1, 0, 0, 0, 0, 5},
-            {0, 0, 5, 0, 9, 0, 2, 0, 1},
-            {8, 0, 0, 0, 4, 0, 0, 0, 0},
-            {0, 0, 0, 0, 8, 0, 0, 0, 0},
-            {0, 0, 0, 7, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 2, 6, 0, 0, 9},
-            {2, 0, 0, 3, 0, 0, 0, 0, 6},
-            {0, 0, 0, 2, 0, 0, 9, 0, 0},
-            {0, 0, 1, 9, 0, 4, 5, 7, 0}
-    };
 
     int[][] matrix;
     public static final int EMPTY = 0;
     public static final int SIZE = 9;
 
-    public Sudoku(int[][] matrix) {
+    public Sudoku() {
         this.matrix = new int[SIZE][SIZE];
 
+/*
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 this.matrix[i][j] = matrix[i][j];
             }
         }
+*/
+
     }
 
+    /**
+     * Returns the value in the specified position
+     * @param x row
+     * @param y column
+     * @return the value
+     */
     public int getBoxValue(int x, int y) {
         return matrix[x][y];
     }
 
+    /**
+     * Sets the value at the specified position
+     * to the the specified value
+     * @param x row
+     * @param y column
+     * @param value the desired value
+     */
     public void setBoxValue(int x, int y, int value) {
         matrix[x][y] = value;
-    }
-
-    public int[][] getMatrix() {
-        return this.matrix;
-    }
-
-    public void setMatrix(int[][] matrix) {
-        for (int i = 0; i < matrix.length; i++) {
-            System.arraycopy(matrix[i], 0, this.matrix[i], 0, matrix.length);
-        }
     }
 
     /*private boolean solve(int i, int j) {
         return false;
     }*/
 
+    /**
+     * Prints the Sudoku in a readable layout
+     * for debugging
+     */
     public void printMatrix() {
         for (int i = 0; i < SIZE; i++) {
             System.out.println();
+            System.out.print(i + 1 + ":");
             for (int j = 0; j < SIZE; j++) {
                 System.out.print(" " + matrix[i][j]);
             }
@@ -63,8 +63,14 @@ public class Sudoku {
         System.out.println();
     }
 
+    /**
+     * Fills the Sudodu with random numbers
+     * at random position.
+     * Used to simulate user input
+     */
     public void fillRandomly() {
-        for (int i = 0; i < 40; i++) {
+        this.matrix = new int[9][9];
+        for (int i = 0; i < 10; i++) {
             Random random = new Random();
             int positionX = random.nextInt(8);
             int positionY = random.nextInt(8);
@@ -138,30 +144,8 @@ public class Sudoku {
                     return false;
                 }
             }
-
         }
         return true;
     }
 
-    public static void main(String[] args) {
-/*
-        Sudoku sudoku = new Sudoku(GRID_TO_SOLVE);
-        System.out.println("Grid to solve: ");
-        sudoku.printMatrix();
-*/
-
-        int[][] matrix = new int[9][9];
-        matrix[0][0] = 1;
-        matrix[0][1] = 1;
-        matrix[0][2] = 1;
-
-        Sudoku sudoku = new Sudoku(matrix);
-
-        if (sudoku.solve()) {
-            System.out.println("Solved");
-            sudoku.printMatrix();
-        } else {
-            System.out.println("Couldn't solve!");
-        }
-    }
 }

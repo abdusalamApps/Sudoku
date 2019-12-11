@@ -2,22 +2,18 @@ package ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import model.Sudoku;
-import org.jdom.Text;
-
-import java.util.ArrayList;
+import org.apache.http.util.TextUtils;
 
 public class Board extends Application {
 
     static TextField[][] textFields;
-    static int[][] intMatrix;
+    static Sudoku sudoku = new Sudoku();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -32,13 +28,14 @@ public class Board extends Application {
         solveButton.setText("Solve");
         Button clearButton = new Button();
         clearButton.setText("Clear");
-        hBox.getChildren().addAll(solveButton, clearButton);
+        Button fillRandomButton = new Button();
+        fillRandomButton.setText("Fill Random");
+        hBox.getChildren().addAll(solveButton, clearButton, fillRandomButton);
 
         textFields = new TextField[9][9];
-        intMatrix = new int[9][9];
 
-        for (int i = 0; i < intMatrix.length; i++) {
-            for (int j = 0; j < intMatrix.length; j++) {
+        for (int i = 0; i < textFields.length; i++) {
+            for (int j = 0; j < textFields.length; j++) {
                 textFields[i][j] = new TextField();
                 Utils.addTextLimiter(textFields[i][j], 1);
                 textFields[i][j].setPrefColumnCount(1);
@@ -59,34 +56,50 @@ public class Board extends Application {
 
         }
 
+
         solveButton.setOnAction(e -> {
             for (int i = 0; i < textFields.length; i++) {
                 for (int j = 0; j < textFields.length; j++) {
                     String text = textFields[i][j].getText();
-                    if (!text.equals(""))
-                        intMatrix[i][j] = Integer.parseInt(text);
+                    if (!TextUtils.isEmpty(text))
+                        sudoku.setBoxValue(i, j, Integer.parseInt(text));
                 }
             }
 
-            Sudoku sudoku = new Sudoku(intMatrix);
-
             if (sudoku.solve()) {
+                sudoku.printMatrix();
+
                 for (int i = 0; i < textFields.length; i++) {
                     for (int j = 0; j < textFields.length; j++) {
                         textFields[i][j].setText(String.valueOf(
-                                sudoku.getMatrix()[i][j]
+                                sudoku.getBoxValue(i, j)
                         ));
                     }
                 }
+
             } else {
-                System.out.println("Unsolvable");
+                Dialog dialog = new Dialog();
+                dialog.setContentText("Couldn't solve");
+                ButtonType button = new ButtonType("Close", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().add(button);
+                dialog.show();
             }
         });
 
         clearButton.setOnAction(e -> {
-            for (TextField[] fieldArray : textFields) {
-                for (TextField field : fieldArray) {
-                    field.setText("");
+            clear();
+            sudoku.printMatrix();
+        });
+
+        fillRandomButton.setOnAction(e -> {
+            clear();
+            sudoku.fillRandomly();
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    int number = sudoku.getBoxValue(i, j);
+                    if (number > 0) {
+                        textFields[i][j].setText(String.valueOf(number));
+                    }
                 }
             }
         });
@@ -98,6 +111,15 @@ public class Board extends Application {
         primaryStage.show();
     }
 
+    private static void clear() {
+        for (int i = 0; i < textFields.length; i++) {
+            for (int j = 0; j < textFields.length; j++) {
+                textFields[i][j].setText("");
+                sudoku.setBoxValue(i, j, 0);
+            }
+
+        }
+    }
     public static void main(String[] args) {
         launch(args);
     }
