@@ -36,47 +36,44 @@ public class Board extends Application {
 
         for (int i = 0; i < textFields.length; i++) {
             for (int j = 0; j < textFields.length; j++) {
+
                 textFields[i][j] = new TextField();
                 Utils.addTextLimiter(textFields[i][j], 1);
                 textFields[i][j].setPrefColumnCount(1);
                 tilePane.getChildren().add(textFields[i][j]);
 
                 if ((i < 3 || i > 5) && j < 3) {
-                    textFields[i][j].setStyle("-fx-border-color: orange;");
+                    textFields[i][j].setStyle("-fx-border-color: royalblue;");
                 }
 
                 if ((i < 3 || i > 5) && j > 5) {
-                    textFields[i][j].setStyle("-fx-border-color: orange;");
+                    textFields[i][j].setStyle("-fx-border-color: royalblue;");
                 }
 
                 if (i > 2 && i < 6 && j > 2 && j < 6) {
-                    textFields[i][j].setStyle("-fx-border-color: orange;");
+                    textFields[i][j].setStyle("-fx-border-color: royalblue;");
                 }
-            }
 
+            }
         }
 
 
         solveButton.setOnAction(e -> {
+
             for (int i = 0; i < textFields.length; i++) {
                 for (int j = 0; j < textFields.length; j++) {
                     String text = textFields[i][j].getText();
-                    if (!TextUtils.isEmpty(text))
+                    if (!TextUtils.isEmpty(text)) {
                         sudoku.setBoxValue(i, j, Integer.parseInt(text));
+                    } else {
+                        sudoku.setBoxValue(i, j, 0);
+                    }
                 }
             }
 
             if (sudoku.solve()) {
                 sudoku.printMatrix();
-
-                for (int i = 0; i < textFields.length; i++) {
-                    for (int j = 0; j < textFields.length; j++) {
-                        textFields[i][j].setText(String.valueOf(
-                                sudoku.getBoxValue(i, j)
-                        ));
-                    }
-                }
-
+                fillBoard();
             } else {
                 Dialog dialog = new Dialog();
                 dialog.setContentText("Couldn't solve");
@@ -94,14 +91,7 @@ public class Board extends Application {
         fillRandomButton.setOnAction(e -> {
             clear();
             sudoku.fillRandomly();
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    int number = sudoku.getBoxValue(i, j);
-                    if (number > 0) {
-                        textFields[i][j].setText(String.valueOf(number));
-                    }
-                }
-            }
+            fillBoard();
         });
 
         root.setCenter(tilePane);
@@ -111,15 +101,29 @@ public class Board extends Application {
         primaryStage.show();
     }
 
+    private static void fillBoard() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                int number = sudoku.getBoxValue(i, j);
+                if (number > 0) {
+                    textFields[i][j].setText(
+                            String.valueOf(number)
+                    );
+                }
+            }
+        }
+
+    }
+
     private static void clear() {
         for (int i = 0; i < textFields.length; i++) {
             for (int j = 0; j < textFields.length; j++) {
                 textFields[i][j].setText("");
                 sudoku.setBoxValue(i, j, 0);
             }
-
         }
     }
+
     public static void main(String[] args) {
         launch(args);
     }

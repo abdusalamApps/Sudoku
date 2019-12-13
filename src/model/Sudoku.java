@@ -6,21 +6,12 @@ import java.util.Random;
 public class Sudoku {
 
 
-    int[][] matrix;
-    public static final int EMPTY = 0;
-    public static final int SIZE = 9;
+    private int[][] matrix;
+    private static final int EMPTY = 0;
+    private static final int SIZE = 9;
 
     public Sudoku() {
         this.matrix = new int[SIZE][SIZE];
-
-/*
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                this.matrix[i][j] = matrix[i][j];
-            }
-        }
-*/
-
     }
 
     /**
@@ -44,10 +35,6 @@ public class Sudoku {
         matrix[x][y] = value;
     }
 
-    /*private boolean solve(int i, int j) {
-        return false;
-    }*/
-
     /**
      * Prints the Sudoku in a readable layout
      * for debugging
@@ -64,9 +51,9 @@ public class Sudoku {
     }
 
     /**
-     * Fills the Sudodu with random numbers
+     * Fills the Sudoku with random numbers
      * at random position.
-     * Used to simulate user input
+     * Used to emulate user input
      */
     public void fillRandomly() {
         this.matrix = new int[9][9];
@@ -82,7 +69,6 @@ public class Sudoku {
 
     /**
      * Checks if the specified number is in the specified row
-     *
      * @param row
      * @param number
      * @return false if the specified number is NOT in the specified row
@@ -97,7 +83,6 @@ public class Sudoku {
 
     /**
      * Checks if the specified number is in the specified column
-     *
      * @param col
      * @param number
      * @return false if the specified number is NOT in the specified column
@@ -126,12 +111,16 @@ public class Sudoku {
     }
 
     public boolean solve() {
+        if (!controlUserInput()) {
+            return false;
+        }
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
 
                 if (matrix[row][col] == EMPTY) {
-                    for (int number = 1; number <= SIZE; number++) {
+                    for (int number = 1; number <= 9; number++) {
                         if (isOk(row, col, number)) {
+
                             matrix[row][col] = number;
 
                             if (solve()) {
@@ -139,6 +128,7 @@ public class Sudoku {
                             } else {
                                 matrix[row][col] = EMPTY;
                             }
+
                         }
                     }
                     return false;
@@ -148,4 +138,20 @@ public class Sudoku {
         return true;
     }
 
+    private boolean controlUserInput() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (this.matrix[i][j] != 0) {
+                    int value = this.matrix[i][j];
+                    this.matrix[i][j] = 0;
+                    if (!isOk(i, j, value)) {
+                        return false;
+                    }
+                    this.matrix[i][j] = value;
+                }
+            }
+
+        }
+        return true;
+    }
 }
