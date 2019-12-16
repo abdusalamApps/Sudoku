@@ -57,14 +57,13 @@ public class Sudoku {
      */
     public void fillRandomly() {
         this.matrix = new int[9][9];
+        Random random = new Random();
         for (int i = 0; i < 10; i++) {
-            Random random = new Random();
-            int positionX = random.nextInt(8);
-            int positionY = random.nextInt(8);
-            int element = random.nextInt(8);
+            int positionX = random.nextInt(9);
+            int positionY = random.nextInt(9);
+            int element = random.nextInt(9) + 1;
             this.matrix[positionX][positionY] = element;
         }
-
     }
 
     /**
