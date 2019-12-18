@@ -3,6 +3,10 @@ package model;
 
 import java.util.Random;
 
+/**
+ * This class solves a Sudoku matrix
+ *
+ */
 public class Sudoku {
 
 
@@ -94,6 +98,14 @@ public class Sudoku {
         return false;
     }
 
+    /**
+     * Checks if the specified number is
+     * in the the specified 3x3 box
+     * @param row of the number
+     * @param col of the number
+     * @param number the number itself
+     * @return true if it's there or false if it isn't
+     */
     private boolean isInBox(int row, int col, int number) {
         int r = row - row % 3;
         int c = col - col % 3;
@@ -105,10 +117,22 @@ public class Sudoku {
         return false;
     }
 
+    /**
+     * A combined method to check if it's ok to
+     * put a number in a certain box at row and col
+     * @param row the row to put the number in
+     * @param col the column to put the number in
+     * @param number the number itself
+     * @return true if it's ok and false if it's not
+     */
     private boolean isOk(int row, int col, int number) {
         return !isInRow(row, number) && !isInCol(col, number) && !isInBox(row, col, number);
     }
 
+    /**
+     * solves the Sudoku
+     * @return true if it's solvable, false if it's not
+     */
     public boolean solve() {
         if (!controlUserInput()) {
             return false;
@@ -137,6 +161,11 @@ public class Sudoku {
         return true;
     }
 
+    /**
+     * Controls if the user input is ok before procceeding to
+     * solve
+     * @return true if the user input is ok and false if it is not
+     */
     private boolean controlUserInput() {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
